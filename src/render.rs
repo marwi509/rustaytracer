@@ -114,7 +114,7 @@ pub struct Spheres {
     pub reflective: Vec<f64>,
 }
 
-fn randomFloat() -> f64 {
+pub fn randomFloat() -> f64 {
     return rand::random()
 }
 

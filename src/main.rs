@@ -1,4 +1,5 @@
 pub mod render;
+use std::f64::consts::PI;
 use std::ops::Sub;
 use std::ptr::null;
 use std::{fs::File};
@@ -75,15 +76,33 @@ fn main() {
         if x == 0 && y % 100 == 0 {
             println!("{}, {}", x, y);
         }
-        let fx = ((x as f64 * 2.0 - WIDTH as f64) / WIDTH as f64);
+        let fx = (x as f64 * 2.0 - WIDTH as f64) / WIDTH as f64;
         let fy = -((y as f64 * 2.0 - HEIGHT as f64) / HEIGHT as f64) / ar;
         let direction = Vector {x: fx, y: fy, z: 1.0}.normalize();
         let origin = Vector {x: fx, y: fy, z: 0.0};
-        let ray = Ray {origin, direction};
+
+        
+        
+
+        
         let samples = 200;
         let mut sample = Vector {x: 0.0, y: 0.0, z: 0.0};
         for i in 0..samples {
-            let ray = Ray {origin, direction};
+            let apertureSize = 1.0;
+            let distance = 50.0;
+            let randR = render::randomFloat() * apertureSize;
+            let randTheta = render::randomFloat() * 2.0 * PI;
+
+            
+            
+            let rx = f64::cos(randTheta) * randR;
+            let ry = f64::sin(randTheta) * randR;
+
+
+            let apertureFocusPoint = origin + direction.multiply(distance);
+            let newOrigin = Vector {x: origin.x + rx, y: origin.y + ry, z: origin.z};
+            let newDirection = apertureFocusPoint.subtract(&newOrigin).normalize();
+            let ray = Ray {origin: newOrigin, direction: newDirection};
             let r_result = render::render_recursive(ray, &spheres, 0);
             //println!("{} {} {}", r_result.x, r_result.y, r_result.z);
             let spppp = r_result.multiply(255.0);
